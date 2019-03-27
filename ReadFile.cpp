@@ -70,7 +70,14 @@ bool ReadFile::checkFile()
                 //if the next character is a closed delimiter, compare it to the top of the stack
                 else if(next == '}' || next == ']' || next == ')')
                 {
-                    if(next == delimStack->peek())
+                    if(delimStack->isEmpty())
+                    {
+                        cout << "Unmatched delimiter " << next << " at line: " << lines << endl;
+                        flag = false;
+                        found = true;
+                        break;
+                    }
+                    else if(next == delimStack->peek())
                     {
                         delimStack->pop();
                         lineStack->pop();
