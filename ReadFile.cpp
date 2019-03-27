@@ -46,6 +46,8 @@ bool ReadFile::checkFile()
     char next;
     bool flag = true;
     bool found = false;
+    bool singleQuote = false;
+    bool doubleQuote = false;
     while(getline(file, line) && !found)
     {
         if(line[0] == '/' && line[1] == '/')
@@ -59,49 +61,59 @@ bool ReadFile::checkFile()
             {
                 next = line[i];
 
-                //if the next character is an open delimiter, push to stack with line number
-                if(next == '{' || next == '[' || next == '(')
+                //skips any delimiter in quotes
+                if(next == '\'')
                 {
-                    char d = complement(next);
-                    delimStack->push(d);
-                    lineStack->push(lines);
+                    singleQuote = !singleQuote;
                 }
-
-                //if the next character is a closed delimiter, compare it to the top of the stack
-                else if(next == '}' || next == ']' || next == ')')
+                else if(next == '\"')
                 {
-                    if(delimStack->isEmpty())
+                    doubleQuote = !doubleQuote;
+                }
+                else if(!singleQuote && !doubleQuote)
+                {
+                    //if the next character is an open delimiter, push to stack with line number
+                    if(next == '{' || next == '[' || next == '(')
                     {
-                        cout << "Unmatched delimiter " << next << " at line: " << lines << endl;
-                        flag = false;
-                        found = true;
-                        break;
+                        char d = complement(next);
+                        delimStack->push(d);
+                        lineStack->push(lines);
                     }
-                    else if(next == delimStack->peek())
+                    //if the next character is a closed delimiter, compare it to the top of the stack
+                    else if(next == '}' || next == ']' || next == ')')
                     {
-                        delimStack->pop();
-                        lineStack->pop();
-                    }
-                    else if(next != delimStack->peek())
-                    {
-                        cout << "Unmatched delimiter " << complement(delimStack->peek()) << " at line: " << lineStack->peek() << endl;
-                        flag = false;
-                        found = true;
-                        break;
-                    }
-                    else
-                    {
-                        cout << "Unmatched delimiter " << next << " at line: " << lines << endl;
-                        flag = false;
-                        found = true;
-                        break;
+                        if(delimStack->isEmpty())
+                        {
+                            cout << "Unmatched delimiter " << next << " at line: " << lines << endl;
+                            flag = false;
+                            found = true;
+                            break;
+                        }
+                        else if(next == delimStack->peek())
+                        {
+                            delimStack->pop();
+                            lineStack->pop();
+                        }
+                        else if(next != delimStack->peek())
+                        {
+                            cout << "Unmatched delimiter " << complement(delimStack->peek()) << " at line: " << lineStack->peek() << endl;
+                            flag = false;
+                            found = true;
+                            break;
+                        }
+                        else
+                        {
+                            cout << "Unmatched delimiter " << next << " at line: " << lines << endl;
+                            flag = false;
+                            found = true;
+                            break;
+                        }
                     }
                 }
             }
         }
         lines++;
     }
-
     //for an extra open delimiter
     if(!delimStack->isEmpty() && flag)
     {
@@ -109,7 +121,6 @@ bool ReadFile::checkFile()
         << " at line: " << lineStack->peek() << endl;
         flag = false;
     }
-
     file.close();
     return flag;
 }
