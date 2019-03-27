@@ -50,6 +50,7 @@ bool ReadFile::checkFile()
     {
         if(line[0] == '/' && line[1] == '/')
         {
+            lines++;
             continue;
         }
         else
@@ -76,7 +77,7 @@ bool ReadFile::checkFile()
                     }
                     else if(next != delimStack->peek())
                     {
-                        cout << "Unmatched delimiter " << complement(delimStack->pop()) << " at line: " << lineStack->pop() << endl;
+                        cout << "Unmatched delimiter " << complement(delimStack->peek()) << " at line: " << lineStack->peek() << endl;
                         flag = false;
                         found = true;
                         break;
@@ -97,10 +98,11 @@ bool ReadFile::checkFile()
     //for an extra open delimiter
     if(!delimStack->isEmpty() && flag)
     {
-        cout << "Unmatched delimiter " << complement(delimStack->pop()) << " at line: " << lineStack->pop() << endl;
+        cout << "Reached the end of the file. Found an unclosed " << complement(delimStack->peek())
+        << " at line: " << lineStack->peek() << endl;
         flag = false;
     }
-    
+
     file.close();
     return flag;
 }

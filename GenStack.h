@@ -1,4 +1,5 @@
 #include <iostream>
+#include "InvalidStackOperationException.h"
 using namespace std;
 
 template <class T>
@@ -62,18 +63,34 @@ public:
 
     T pop()
     {
-        if(!isEmpty())
+        try
         {
-            return myArray[top--];
+            if(isEmpty())
+            {
+                throw InvalidStackOperationException("Cannot pop an empty stack.");
+            }
         }
+        catch (InvalidStackOperationException& msg)
+        {
+            cout << msg.getMessage() << endl;
+        }
+        return myArray[top--];
     }
 
     T peek()
     {
-        if(!isEmpty())
+        try
         {
-            return myArray[top];
+            if(isEmpty())
+            {
+                throw InvalidStackOperationException("Cannot peek an empty stack.");
+            }
         }
+        catch (InvalidStackOperationException& msg)
+        {
+            cout << msg.getMessage() << endl;
+        }
+        return myArray[top];
     }
 
     bool isFull()
