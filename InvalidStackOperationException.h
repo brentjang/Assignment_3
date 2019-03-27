@@ -9,12 +9,8 @@ private:
     string errorMsg;
 
 public:
-    InvalidStackOperationException(const string& err)
-    {
-        errorMsg = err;
-    }
-    string getMessage() const
-    {
-        return errorMsg;
-    }
+    InvalidStackOperationException();
+    InvalidStackOperationException(const string& err);
+    string getMessage() const;
+    ~InvalidStackOperationException();
 };

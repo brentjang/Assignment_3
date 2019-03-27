@@ -84,12 +84,12 @@ T GenStack<T>::pop()
         {
             throw InvalidStackOperationException("Cannot pop an empty stack.");
         }
+        return myArray[top--];
     }
     catch (InvalidStackOperationException& msg)
     {
         cout << msg.getMessage() << endl;
     }
-    return myArray[top--];
 }
 
 template<class T>
@@ -101,12 +101,12 @@ T GenStack<T>::peek()
         {
             throw InvalidStackOperationException("Cannot peek an empty stack.");
         }
+        return myArray[top];
     }
     catch (InvalidStackOperationException& msg)
     {
         cout << msg.getMessage() << endl;
     }
-    return myArray[top];
 }
 
 template<class T>
